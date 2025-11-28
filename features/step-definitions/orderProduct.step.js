@@ -1,29 +1,7 @@
 // features/step-definitions/orderProduct.step.js
-import { Given, When, Then } from "@cucumber/cucumber";
+import { When, Then } from "@cucumber/cucumber";
 import fs from "fs";
 import path from "path";
-
-// import your page objects (paths relative to this file)
-import DemoShopPage from "../../POM_pages/demoshopPage.js";
-import ProductPage from "../../POM_pages/productPage.js";
-import CartPage from "../../POM_pages/cartPage.js";
-import OrderProductPage from "../../POM_pages/orderProduct.js";
-import AddNewAddressPage from "../../POM_pages/addAddressPage.js";
-
-Given('User is on demoshop application with is', async function () {
-
-  const jsonPath = path.resolve("User_data/userData.json");
-  const dataset = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-
-  await this.page.goto(dataset[2].url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-
-  this.demoshop = new DemoShopPage(this.page);
-  this.productPage = new ProductPage(this.page);
-  this.cartPage = new CartPage(this.page);
-  this.orderDetailsPage = new OrderProductPage(this.page);
-  this.demoshop = new DemoShopPage(this.page);
-  this.addNewAddressPage = new AddNewAddressPage(this.page);
-});
 
 When('user create account to demoshop with valid credentials', async function (dataTable) {
   const rows = dataTable.hashes();
@@ -53,10 +31,12 @@ When('user create account to demoshop with valid credentials', async function (d
 });
 
 When('user select the product and add to cart', async function () {
-  await this.demoshop.searchProduct();
+  const jsonPath = path.resolve("User_data/userData.json");
+  const dataset = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+  await this.demoshop.searchProduct(dataset[3].link,dataset[3].productName);
   await this.productPage.selectProduct();
   await this.productPage.addToCart();
-  await this.cartPage.verifyProductVisibleInCart();
+  await this.cartPage.verifyProductVisibleInCart(dataset[3].productFullName);
   await this.cartPage.selectCountryByValue("41"); // India
 });
 

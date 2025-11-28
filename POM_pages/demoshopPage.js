@@ -14,9 +14,9 @@ export default class demoshopPage {
         this.registerButton = page.locator('#register-button');
         this.logoutLink = page.locator('a:has-text("Log out")');
         this.accountLink = page.locator('a.account');
-        this.computerMenu = page.locator('a[href="/computers"]').nth(0);
+        this.computerMenu = 'a[href="/{link}"]';
         this.desktopMenu = page.locator('a[href="/desktops"]').nth(3);
-        this.deviceSelector = page.locator('a[href*="/build-your-own-computer"]').nth(1);
+        this.deviceSelector = 'a[href="/{productName}"]';
         this.selectBillingCountry = page.locator('#BillingNewAddress_CountryId');
         this.verifyHomePageDisplayed = page.locator("//div[normalize-space(text())='Your registration completed']");
 
@@ -37,17 +37,25 @@ export default class demoshopPage {
         await expect(this.verifyHomePageDisplayed).toBeVisible();
     }
 
-    async searchProduct() {
-        await this.computerMenu.click();
-        await this.desktopMenu.waitFor({ state: 'visible' });
-        await this.desktopMenu.click();
-        await this.deviceSelector.waitFor({ state: 'visible' });
+    async searchProduct(link, productName) {
+        const safeLink = String(link).trim();
+        const safeProductName = String(productName).trim();
+        const locatorString =this.page.locator(this.computerMenu.replace("{link}", safeLink));
+        await locatorString.nth(0).click();
+        if (safeLink==="computers") {
+            await this.desktopMenu.waitFor({ state: 'visible' });
+            await this.desktopMenu.click();
+        }
+        const productLocator = this.page.locator(this.deviceSelector.replace("{productName}",safeProductName));
+        await productLocator.nth(0).waitFor({ state: 'visible' });
     }
 
     async selectProduct() {
-        await this.deviceSelector.click();
+        await productLocator.nth(0).click();
         await this.addCartOption.waitFor({ state: 'visible' });
-        await this.hddSelector.click();
+        if (safeLink==="computers") {
+            await this.hddSelector.click();
+        }
     }
 
     async addToCart() {

@@ -4,9 +4,7 @@
   "description": "",
   "type": "module",
   "main": "index.js",
-  "scripts": {
-    "cucumber": "npx cucumber-js --tags '@OrderProductTest'"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -14,6 +12,7 @@
     "@cucumber/cucumber": "^12.2.0",
     "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.1",
+    "allure-commandline": "^2.34.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

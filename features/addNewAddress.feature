@@ -1,6 +1,6 @@
 Feature: Save address for the details in demoshop application
 
-    @AddNewAddressTest
+    @addNewAddressTest
     Scenario: Add new address in demoshop application
         Given User is on demoshop application with is
         When user create account to demoshop with valid credentials

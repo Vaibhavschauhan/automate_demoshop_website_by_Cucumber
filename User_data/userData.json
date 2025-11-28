@@ -21,5 +21,10 @@
     },
     {
         "url": "https://demowebshop.tricentis.com/"
+    },
+    {
+        "link":"computers",
+        "productName":"build-your-own-computer",
+        "productFullName":"Build your own computer"
     }
 ]

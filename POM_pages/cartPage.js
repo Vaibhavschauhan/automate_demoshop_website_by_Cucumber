@@ -7,7 +7,7 @@ export default class cartPage {
         this.termsCheckbox = page.locator('#termsofservice');
         this.checkoutButton = page.locator('#checkout');
         this.cartPage = page.locator("//span[text()='Shopping cart']");
-        this.productInCart = page.locator("//*[text()='Build your own computer' and @class='product-name']");
+        this.productInCart = "//*[text()='{productFullName}' and @class='product-name']";
 
     }
 
@@ -16,10 +16,12 @@ export default class cartPage {
         await this.termsCheckbox.check();
     }
 
-    async verifyProductVisibleInCart() {
+    async verifyProductVisibleInCart(productFullName) {
+        const safeProductName = String(productFullName).trim();
         await this.cartPage.click();
         await this.selectCountry.waitFor({ state: 'visible' });
-        await expect(this.productInCart).toBeVisible();
+        const productLocator = this.page.locator(this.productInCart.replace("{productFullName}",safeProductName));
+        await expect(productLocator).toBeVisible();
     }
 
 }

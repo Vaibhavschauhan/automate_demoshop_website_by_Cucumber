@@ -1,6 +1,6 @@
 Feature:Order the product from demoshop application
 
-    @OrderProductTest 
+    @orderProductTest 
     Scenario: Order the product from demoshop application
         Given User is on demoshop application with is
         When user create account to demoshop with valid credentials

@@ -2,9 +2,7 @@ import { When, Then, setDefaultTimeout } from "@cucumber/cucumber";
 import fs from "fs";
 import path from "path";
 
-
 setDefaultTimeout(60_000);
-
 
 When('User click on addresses link to add new address', async function () {
     await this.addNewAddressPage.clickOnAddressesLink();
