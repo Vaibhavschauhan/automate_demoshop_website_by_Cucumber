@@ -2,8 +2,11 @@
   "name": "cucumber-demoshop",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "cucumber": "npx cucumber-js --tags '@OrderProductTest'"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

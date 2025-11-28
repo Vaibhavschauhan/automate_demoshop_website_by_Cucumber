@@ -1,0 +1,20 @@
+[{
+    "City": "Mumbai",
+    "Address1": "123, ABC Street",
+    "ZipPostalCode": "400001",
+    "PhoneNumber": "9876543210",
+    "FirstName": "John",
+    "LastName": "Wick",
+    "Email": "john123@gmail.com",
+    "Country": "nAuru"
+},
+{
+    "City": "Delhi",
+    "Address1": "456, DEF Avenue",
+    "ZipPostalCode": "110001",
+    "PhoneNumber": "9123456780",
+    "FirstName": "Alice",
+    "LastName": "Smith",
+    "Email": "john123@gmail.com",
+    "Country": "India"
+}]
