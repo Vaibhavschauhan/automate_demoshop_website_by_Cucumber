@@ -1,10 +1,5 @@
-import { When, Then, Given } from "@cucumber/cucumber";
-import DemoshopPage from "../../POM_pages/demoshopPage.js";
+import { When, Then } from "@cucumber/cucumber";
 
-Given('Create account to demoshop with {string} is', async function (url) {
-    await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    this.demoshop = new DemoshopPage(this.page);
-});
 
 When('user clicks on register link and fill all the details and submit', async function (dataTable) {
     const rows = dataTable.hashes();

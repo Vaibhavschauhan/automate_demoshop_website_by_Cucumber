@@ -1,5 +1,7 @@
 // features/step-definitions/orderProduct.step.js
 import { Given, When, Then } from "@cucumber/cucumber";
+import fs from "fs";
+import path from "path";
 
 // import your page objects (paths relative to this file)
 import DemoShopPage from "../../POM_pages/demoshopPage.js";
@@ -8,16 +10,19 @@ import CartPage from "../../POM_pages/cartPage.js";
 import OrderProductPage from "../../POM_pages/orderProduct.js";
 import AddNewAddressPage from "../../POM_pages/addAddressPage.js";
 
-Given('User is on demoshop application with {string} is', async function (url) {
-  // this.page is already created by the Before in hooks.js
-  await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+Given('User is on demoshop application with is', async function () {
+
+  const jsonPath = path.resolve("User_data/userData.json");
+  const dataset = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+  await this.page.goto(dataset[2].url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
   this.demoshop = new DemoShopPage(this.page);
   this.productPage = new ProductPage(this.page);
   this.cartPage = new CartPage(this.page);
   this.orderDetailsPage = new OrderProductPage(this.page);
   this.demoshop = new DemoShopPage(this.page);
-    this.addNewAddressPage = new AddNewAddressPage(this.page);
+  this.addNewAddressPage = new AddNewAddressPage(this.page);
 });
 
 When('user create account to demoshop with valid credentials', async function (dataTable) {
@@ -55,9 +60,11 @@ When('user select the product and add to cart', async function () {
   await this.cartPage.selectCountryByValue("41"); // India
 });
 
-When('user proceed to checkout and fill all the details', async function (dataTable) {
-  const rows = dataTable.hashes();
-  const input = rows[0];
+When('user proceed to checkout and fill all the details', async function () {
+  const jsonPath = path.resolve("User_data/userData.json");
+  const dataset = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+
+  const input = dataset[0];
   await this.orderDetailsPage.fillBillingDetails(input);
 });
 
