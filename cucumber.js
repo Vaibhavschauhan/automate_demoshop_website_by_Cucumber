@@ -4,5 +4,13 @@ export default {
     "features/support/*.js"
   ],
   publishQuiet: true,
-  format: ["progress"],
+  format: [
+    "progress",
+    "allure-cucumberjs/reporter"
+  ],
+  formatOptions: {
+    "allure-cucumberjs/reporter": {
+      resultsDir: process.env.ALLURE_RESULTS_DIR || "reports/allure-results"
+    }
+  }
 };
