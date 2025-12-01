@@ -49,7 +49,21 @@ Before(async function () {
   this.addNewAddressPage = new AddNewAddressPage(page);
 });
 
-After(async function () {
+After(async function (scenario) {
+  // Take screenshot on failure
+  if (scenario.result.status === "FAILED") {
+    const screenshotsDir = "test-results/screenshots";
+    if (!fs.existsSync(screenshotsDir)) {
+      fs.mkdirSync(screenshotsDir, { recursive: true });
+    }
+    const screenshotPath = path.join(
+      screenshotsDir,
+      `${scenario.pickle.name}-${Date.now()}.png`
+    );
+    await this.page?.screenshot({ path: screenshotPath });
+    console.log(`Screenshot saved: ${screenshotPath}`);
+  }
+
   try {
     await this.demoshop?.logout();
     await this.demoshop?.verifyLogout();

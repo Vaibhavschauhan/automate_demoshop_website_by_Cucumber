@@ -303,7 +303,4 @@ export default class addAddressPage {
         await this.verifySavedAddress.waitFor({ state: 'visible' });
         await expect(this.verifySavedAddress).toBeVisible();
     }
-
-
-
 }

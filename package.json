@@ -4,12 +4,13 @@
   "description": "",
   "type": "module",
   "main": "index.js",
-  "scripts": {
-    "test": "cucumber-js && node move-allure-results.js",
-    "allure:report": "allure generate reports/allure-results --clean -o reports/allure-report",
-    "allure:open": "npm run allure:report && allure open reports/allure-report",
-    "test:with-report": "npm test && npm run allure:open"
-  },
+ "scripts": {
+  "cucumber-js": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report && allure open reports/allure-report",
+  "test": "cucumber-js && node move-allure-results.js",
+  "allure:report": "allure generate reports/allure-results --clean -o reports/allure-report",
+  "allure:open": "npm run allure:report && allure open reports/allure-report",
+  "test:with-report": "npm test && npm run allure:open"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
