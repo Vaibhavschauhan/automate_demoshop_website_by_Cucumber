@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.js",
  "scripts": {
+  "test:ci": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report",
   "cucumber-js": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report && allure open reports/allure-report",
   "test": "cucumber-js && node move-allure-results.js",
   "allure:report": "allure generate reports/allure-results --clean -o reports/allure-report",
