@@ -1,1 +1,1 @@
-[{"buildOrder":5,"reportUrl":"http://localhost:9090/job/cucumber-demowebshop-webapplication-by-local/5/allure","reportName":"AllureReport","data":{"run":4,"retry":108}}]
+[{"buildOrder":6,"reportUrl":"http://localhost:9090/job/cucumber-demowebshop-webapplication-by-local/6/allure","reportName":"AllureReport","data":{"run":4,"retry":112}},{"buildOrder":5,"reportUrl":"http://localhost:9090/job/cucumber-demowebshop-webapplication-by-local/5/allure","reportName":"AllureReport","data":{"run":4,"retry":108}}]
