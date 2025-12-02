@@ -65,7 +65,7 @@ jobs:
           mkdir -p reports/allure-report
 
       - name: Run Cucumber tests
-        run: npm run test:ci
+        run: npm run cucumber-js
         env:
           CI: true
 
