@@ -17,7 +17,7 @@ let context;
 let page;
 
 BeforeAll(async function () {
-  browser = await chromium.launch({ headless: false }); // false while debugging
+  browser = await chromium.launch({ headless: true }); // false while debugging
   context = await browser.newContext();
   page = await context.newPage();
 });

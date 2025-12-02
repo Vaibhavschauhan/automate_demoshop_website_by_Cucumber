@@ -68,3 +68,85 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Debug — list .feature files & playwright browsers
+        run: |
+          echo "=== Features ==="
+          find . -name "*.feature" -print || true
+          echo "=== Playwright browser cache (example) ==="
+          ls -la /home/runner/.cache/ms-playwright || true
+
+      - name: Run Cucumber (your npm script)
+        env:
+          CI: true
+        run: npm run test
+
+      - name: Generate Allure HTML (if results exist)
+        id: generate-allure
+        run: |
+          if [ -d "reports/allure-results" ] && [ "$(ls -A reports/allure-results || true)" != "" ]; then
+            echo "Found allure-results, generating HTML..."
+            npx allure generate reports/allure-results --clean -o reports/allure-report
+          else
+            echo "No allure-results found - skipping generate"
+          fi
+
+      - name: Check whether allure HTML was generated
+        id: check-report
+        run: |
+          if [ -d "reports/allure-report" ] && [ "$(ls -A reports/allure-report || true)" != "" ]; then
+            echo "report=true" >> $GITHUB_OUTPUT
+            echo "Allure HTML present."
+          else
+            echo "report=false" >> $GITHUB_OUTPUT
+            echo "No Allure HTML present."
+          fi
+
+      - name: Upload Allure raw results (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: reports/allure-results
+
+      - name: Upload Allure HTML artifact (downloadable from Actions UI)
+        if: steps.check-report.outputs.report == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: reports/allure-report
+
+      # Prepare artifact for GitHub Pages deploy (only if report exists)
+      - name: Upload pages artifact (prepare for Pages deploy)
+        if: steps.check-report.outputs.report == 'true'
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: reports/allure-report
+
+  # Separate job to deploy Pages. This runs ONLY if report_exists == true.
+  deploy-pages:
+    needs: test
+    runs-on: ubuntu-latest
+    # Ensure these permissions for the deploy job
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    if: needs.test.outputs.report_exists == 'true'
+
+    steps:
+      # Note: checkout is not required for deploy-pages action, but we keep a short step to display info
+      - name: Show Pages deploy info
+        run: |
+          echo "Deploying Allure HTML to GitHub Pages from artifact uploaded by the 'test' job."
+
+      - name: Deploy to GitHub Pages (artifact published by previous job)
+        uses: actions/deploy-pages@v1
+
+      # Optional: output the expected Pages URL (best-effort). User should confirm repository Pages settings.
+      - name: Print expected GitHub Pages URL
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          REPO="$(echo '${{ github.repository }}' | cut -d'/' -f2)"
+          echo "Possible Pages URL (if your Pages site uses the repo root):"
+          echo "https://${OWNER}.github.io/${REPO}/"
+          echo "(If your repo has a custom Pages domain or different settings, the URL may vary.)"
+
