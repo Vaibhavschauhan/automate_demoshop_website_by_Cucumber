@@ -7,7 +7,7 @@
  "scripts": {
   "test:ci": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report",
   "playwright": "npx playwright test",
-  "cucumber-js": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report && allure open reports/allure-report",
+  "cucumber-js": "cucumber-js && node move-allure-results.js && allure generate reports/allure-results --clean -o reports/allure-report",
   "test": "cucumber-js && node move-allure-results.js",
   "allure:report": "allure generate reports/allure-results --clean -o reports/allure-report",
   "allure:open": "npm run allure:report && allure open reports/allure-report",
