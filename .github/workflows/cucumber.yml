@@ -27,7 +27,7 @@
 #         retention-days: 30
 
 
-name: Cucumber Tests (with Playwright browsers)
+name: Cucumber Tests (with Playwright browsers + Allure -> GitHub Pages)
 
 on:
   push:
@@ -35,10 +35,20 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# Give the workflow the permissions required to publish to Pages and read repo contents.
+permissions:
+  contents: read       # needed to checkout / read repo
+  pages: write         # needed for deploy-pages step
+  id-token: write      # if OIDC is used by deploy action (safe to include)
+
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
+    # Expose whether an allure report was generated as a job output
+    outputs:
+      report_exists: ${{ steps.check-report.outputs.report }}
 
     steps:
       - name: Checkout repo
@@ -58,33 +68,3 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Debug — list .feature files & playwright browsers
-        run: |
-          echo "=== Features ==="
-          find . -name "*.feature" -print || true
-          echo "=== Playwright browser path (example) ==="
-          ls -la /home/runner/.cache/ms-playwright || true
-
-      - name: Run Cucumber (your npm script)
-        env:
-          CI: true
-        run: npm run cucumber-js
-
-      - name: Generate Allure HTML (if results exist)
-        run: |
-          if [ -d "reports/allure-results" ] && [ "$(ls -A reports/allure-results || true)" != "" ]; then
-            npx allure generate reports/allure-results --clean -o reports/allure-report
-          else
-            echo "No allure-results found - skipping generate"
-          fi
-
-      - name: Upload Allure HTML artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: reports/allure-report
-
-      - name: Upload Allure raw results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: reports/allure-results
