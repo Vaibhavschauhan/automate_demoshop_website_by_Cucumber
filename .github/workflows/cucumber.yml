@@ -35,6 +35,12 @@ on:
   pull_request:
     branches: [ main, master ]
 
+# Required permissions for deploying to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -69,15 +75,25 @@ jobs:
           CI: true
         run: npm run test
 
-      - name: Generate Allure HTML (if results exist)
+      # Generate the Allure HTML if results exist, and set an output flag
+      - id: generate_report
+        name: Generate Allure HTML (if results exist)
         run: |
           if [ -d "reports/allure-results" ] && [ "$(ls -A reports/allure-results || true)" != "" ]; then
+            echo "Found allure-results, generating HTML..."
             npx allure generate reports/allure-results --clean -o reports/allure-report
+            if [ -d "reports/allure-report" ] && [ "$(ls -A reports/allure-report || true)" != "" ]; then
+              echo "report_generated=true" >> $GITHUB_OUTPUT
+            else
+              echo "report_generated=false" >> $GITHUB_OUTPUT
+            fi
           else
             echo "No allure-results found - skipping generate"
+            echo "report_generated=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload Allure HTML artifact
+        if: ${{ steps.generate_report.outputs.report_generated == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
@@ -88,5 +104,18 @@ jobs:
         with:
           name: allure-results
           path: reports/allure-results
+
+      # Publish the generated site to GitHub Pages (only if report was generated)
+      - name: Upload site for Pages
+        if: ${{ steps.generate_report.outputs.report_generated == 'true' }}
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: reports/allure-report
+
+      - name: Deploy to GitHub Pages
+        if: ${{ steps.generate_report.outputs.report_generated == 'true' }}
+        uses: actions/deploy-pages@v1
+
+
 
       
