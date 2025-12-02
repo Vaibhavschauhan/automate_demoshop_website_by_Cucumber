@@ -67,7 +67,7 @@ jobs:
       - name: Run Cucumber (your npm script)
         env:
           CI: true
-        run: npm run cucumber-js
+        run: npm run test
 
       - name: Generate Allure HTML (if results exist)
         run: |
